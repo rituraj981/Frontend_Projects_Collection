@@ -1,21 +1,3 @@
-<!-- 
-Description
-- Build an FAQ section where clicking a question expands/collapses its answer. Only one answer should be visible at a time (optional: allow multiple open).
-
-What You'll Learn
-- Event delegation
-- CSS transitions for smooth animations
-- Toggle functionality
-- Working with sibling elements
-
------- Step-by-Step Approach ------
-Create HTML structure with questions and answers
-Style with CSS (hide answers by default)
-Add click listeners to questions
-Toggle visibility of clicked answer
-Close other answers (optional) 
--->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -304,33 +286,3 @@ Close other answers (optional)
     </script>
 </body>
 </html>
-
-<!-- 
-
-// EVENT DELEGATION - Instead of adding listeners to each header:
-// ❌ Bad approach
-    headers.forEach(header => {
-        header.addEventListener('click', () => { });
-    });
-
-// ✅ Good approach - Listen on parent
-    accordion.addEventListener('click', (e) => {
-        // e.target = the actual element clicked
-        // .closest() = find parent matching selector
-        const header = e.target.closest('.accordion-header');
-        if (!header) return;  // Clicked somewhere else
-        // Handle the click...
-    });
-
-// CSS TRANSITION TRICK for smooth height animation
-// Can't transition height: auto, so we use max-height
-    .accordion-content {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease;
-    }
-    .accordion-item.active .accordion-content {
-        max-height: 300px;  // Larger than actual content
-    } 
-
--->
