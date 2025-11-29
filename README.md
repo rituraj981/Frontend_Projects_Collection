@@ -43,7 +43,7 @@ This repository contains **mini frontend projects** that I built while learning 
 
 | # | Project | Description | Demo | Code |
 |---|---------|-------------|------|------|
-| 01 | [Counter App](./01-counter-app) | Simple counter with increment, decrement, reset | [Live Demo](https://yourusername.github.io/repo-name/01-counter-app) | [Source](./01-counter-app) |
+| 01 | [Counter App](./01-counter-app) | Simple counter with increment, decrement, reset | [Live Demo](https://rituraj981.github.io/Frontend_Projects_Collection/CounterApp.html) | [Source](./CounterApp.html) |
 | 02 | [Accordion FAQ](./02-accordion-faq) | Expandable FAQ section with smooth animations | [Live Demo](https://yourusername.github.io/repo-name/02-accordion-faq) | [Source](./02-accordion-faq) |
 | 03 | [Image Gallery](./03-image-gallery) | Gallery with lightbox and keyboard navigation | [Live Demo](https://yourusername.github.io/repo-name/03-image-gallery) | [Source](./03-image-gallery) |
 | 04 | [Countdown Timer](./04-countdown-timer) | Countdown to any date with progress bar | [Live Demo](https://yourusername.github.io/repo-name/04-countdown-timer) | [Source](./04-countdown-timer) |
