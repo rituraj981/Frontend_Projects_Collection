@@ -67,19 +67,6 @@ This repository contains **mini frontend projects** that I built while learning 
   </tr>
 </table>
 
-### Key Concepts Practiced
-
-- ✅ DOM Manipulation
-- ✅ Event Handling
-- ✅ CSS Flexbox & Grid
-- ✅ CSS Animations & Transitions
-- ✅ Local Storage
-- ✅ Responsive Design
-- ✅ Form Validation
-- ✅ Array Methods (map, filter, reduce)
-- ✅ Async JavaScript & Fetch API
-- ✅ ES6+ Features
-
 ---
 
 ## 🚀 Getting Started
@@ -88,10 +75,9 @@ This repository contains **mini frontend projects** that I built while learning 
 
 - Any modern web browser (Chrome, Firefox, Safari, Edge)
 - Code editor (VS Code recommended)
-- Git installed on your machine
 
 ### Installation
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/repo-name.git
+   git clone https://github.com/rituraj981/Frontend_Projects_Collection.git
