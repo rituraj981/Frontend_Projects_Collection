@@ -1,8 +1,3 @@
-<!-- BANNER IMAGE -->
-<div align="center">
-  <img src="assets/banner.png" alt="Frontend Projects Banner" width="100%">
-</div>
-
 <!-- TITLE & BADGES -->
 <h1 align="center">🚀 Frontend Projects Collection</h1>
 
@@ -50,39 +45,6 @@ This repository contains **mini frontend projects** that I built while learning 
 | 05 | [Password Strength](./05-password-strength) | Real-time password strength checker | --- | [Source](./05-password-strength.html) |
 | 06 | [Search Filter](./06-search-filter) | Filterable product list with search | --- | [Source](./06-search-filter.html) |
 | 07 | [Contact Manager](./07-contact-manager) | Full CRUD contact management app | --- | [Source](./07-contact-manager.html) |
-
----
-
-## 🖼️ Project Previews
-
-<div align="center">
-  <table>
-    <tr>
-      <td align="center">
-        <img src="./01-counter-app/screenshot.png" width="300" alt="Counter App">
-        <br>
-        <strong>Counter App</strong>
-      </td>
-      <td align="center">
-        <img src="./02-accordion-faq/screenshot.png" width="300" alt="Accordion FAQ">
-        <br>
-        <strong>Accordion FAQ</strong>
-      </td>
-    </tr>
-    <tr>
-      <td align="center">
-        <img src="./03-image-gallery/screenshot.png" width="300" alt="Image Gallery">
-        <br>
-        <strong>Image Gallery</strong>
-      </td>
-      <td align="center">
-        <img src="./04-countdown-timer/screenshot.png" width="300" alt="Countdown Timer">
-        <br>
-        <strong>Countdown Timer</strong>
-      </td>
-    </tr>
-  </table>
-</div>
 
 ---
 
