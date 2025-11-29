@@ -43,13 +43,13 @@ This repository contains **mini frontend projects** that I built while learning 
 
 | # | Project | Description | Demo | Code |
 |---|---------|-------------|------|------|
-| 01 | [Counter App](./01-counter-app) | Simple counter with increment, decrement, reset | [Live Demo](https://rituraj981.github.io/Frontend_Projects_Collection/CounterApp.html) | [Source](./CounterApp.html) |
-| 02 | [Accordion FAQ](./02-accordion-faq) | Expandable FAQ section with smooth animations | [Live Demo](https://yourusername.github.io/repo-name/02-accordion-faq) | [Source](./02-accordion-faq) |
-| 03 | [Image Gallery](./03-image-gallery) | Gallery with lightbox and keyboard navigation | [Live Demo](https://yourusername.github.io/repo-name/03-image-gallery) | [Source](./03-image-gallery) |
-| 04 | [Countdown Timer](./04-countdown-timer) | Countdown to any date with progress bar | [Live Demo](https://yourusername.github.io/repo-name/04-countdown-timer) | [Source](./04-countdown-timer) |
-| 05 | [Password Strength](./05-password-strength) | Real-time password strength checker | [Live Demo](https://yourusername.github.io/repo-name/05-password-strength) | [Source](./05-password-strength) |
-| 06 | [Search Filter](./06-search-filter) | Filterable product list with search | [Live Demo](https://yourusername.github.io/repo-name/06-search-filter) | [Source](./06-search-filter) |
-| 07 | [Contact Manager](./07-contact-manager) | Full CRUD contact management app | [Live Demo](https://yourusername.github.io/repo-name/07-contact-manager) | [Source](./07-contact-manager) |
+| 01 | [Counter App](./01-counter-app) | Simple counter with increment, decrement, reset | --- | [Source](./01-CounterApp.html) |
+| 02 | [Accordion FAQ](./02-accordion-faq) | Expandable FAQ section with smooth animations | ---  | [Source](./02-accordion-faq.html) |
+| 03 | [Image Gallery](./03-image-gallery) | Gallery with lightbox and keyboard navigation | ---  | [Source](./03-image-gallery.html) |
+| 04 | [Countdown Timer](./04-countdown-timer) | Countdown to any date with progress bar | --- | [Source](./04-countdown-timer.html) |
+| 05 | [Password Strength](./05-password-strength) | Real-time password strength checker | --- | [Source](./05-password-strength.html) |
+| 06 | [Search Filter](./06-search-filter) | Filterable product list with search | --- | [Source](./06-search-filter.html) |
+| 07 | [Contact Manager](./07-contact-manager) | Full CRUD contact management app | --- | [Source](./07-contact-manager.html) |
 
 ---
 
