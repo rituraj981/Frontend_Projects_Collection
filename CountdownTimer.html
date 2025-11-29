@@ -1,0 +1,493 @@
+<!-- 
+Description
+- Build a countdown timer that counts down to a specific date/time. Display days, hours, minutes, and seconds remaining. Show a message when countdown ends.
+
+What You'll Learn
+- Working with JavaScript Date objects
+- setInterval for repeated execution
+- Time calculations
+- Formatting numbers
+
+------ Step-by-Step Approach ------
+1. Set a target date
+2. Calculate difference between now and target
+3. Convert milliseconds to days/hours/minutes/seconds
+4. Update display every second with setInterval
+5. Handle countdown completion 
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+        }
+
+        .countdown-container {
+            text-align: center;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #e94560;
+        }
+
+        .event-name {
+            font-size: 18px;
+            color: #888;
+            margin-bottom: 40px;
+        }
+
+        /* Timer display */
+        .timer {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .time-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px 20px;
+            border-radius: 15px;
+            min-width: 120px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .time-value {
+            font-size: 60px;
+            font-weight: bold;
+            line-height: 1;
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .time-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #888;
+            margin-top: 10px;
+            letter-spacing: 2px;
+        }
+
+        /* Custom date input */
+        .custom-date {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .custom-date label {
+            display: block;
+            margin-bottom: 10px;
+            color: #888;
+        }
+
+        .custom-date input {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            margin-right: 10px;
+        }
+
+        .custom-date button {
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background: #e94560;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .custom-date button:hover {
+            background: #d63050;
+        }
+
+        /* Preset buttons */
+        .presets {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .preset-btn {
+            padding: 8px 15px;
+            font-size: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            background: transparent;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #e94560;
+        }
+
+        /* Completed state */
+        .completed {
+            font-size: 36px;
+            padding: 40px;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Progress bar */
+        .progress-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 30px;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e94560, #ff6b6b);
+            border-radius: 3px;
+            transition: width 1s linear;
+        }
+
+        .progress-text {
+            text-align: right;
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="countdown-container">
+        <h1>⏰ Countdown Timer</h1>
+        <p class="event-name" id="event-name">New Year 2025</p>
+
+        <!-- Progress bar -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+            <div class="progress-text" id="progress-text">0% complete</div>
+        </div>
+
+        <!-- Timer Display -->
+        <div class="timer" id="timer">
+            <div class="time-box">
+                <div class="time-value" id="days">00</div>
+                <div class="time-label">Days</div>
+            </div>
+            <div class="time-box">
+                <div class="time-value" id="hours">00</div>
+                <div class="time-label">Hours</div>
+            </div>
+            <div class="time-box">
+                <div class="time-value" id="minutes">00</div>
+                <div class="time-label">Minutes</div>
+            </div>
+            <div class="time-box">
+                <div class="time-value" id="seconds">00</div>
+                <div class="time-label">Seconds</div>
+            </div>
+        </div>
+
+        <!-- Custom Date Picker -->
+        <div class="custom-date">
+            <label for="target-date">Set your own countdown:</label>
+            <input type="datetime-local" id="target-date">
+            <button id="set-date-btn">Set Date</button>
+            
+            <div class="presets">
+                <button class="preset-btn" data-minutes="5">5 Minutes</button>
+                <button class="preset-btn" data-minutes="30">30 Minutes</button>
+                <button class="preset-btn" data-hours="1">1 Hour</button>
+                <button class="preset-btn" data-days="1">Tomorrow</button>
+                <button class="preset-btn" data-days="7">1 Week</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // STATE
+        // ============================================
+        let targetDate = new Date('2025-01-01T00:00:00');
+        let startDate = new Date(); // When countdown started (for progress)
+        let timerInterval = null;
+
+        // ============================================
+        // DOM ELEMENTS
+        // ============================================
+        const daysEl = document.querySelector('#days');
+        const hoursEl = document.querySelector('#hours');
+        const minutesEl = document.querySelector('#minutes');
+        const secondsEl = document.querySelector('#seconds');
+        const timerEl = document.querySelector('#timer');
+        const eventNameEl = document.querySelector('#event-name');
+        const targetDateInput = document.querySelector('#target-date');
+        const setDateBtn = document.querySelector('#set-date-btn');
+        const presetBtns = document.querySelectorAll('.preset-btn');
+        const progressFill = document.querySelector('#progress-fill');
+        const progressText = document.querySelector('#progress-text');
+
+        // ============================================
+        // FUNCTIONS
+        // ============================================
+
+        // Pad number with leading zero
+        const padNumber = (num) => {
+            return num.toString().padStart(2, '0');
+        };
+
+        // Calculate time remaining
+        const getTimeRemaining = () => {
+            const now = new Date();
+            const diff = targetDate - now;
+
+            // If countdown finished
+            if (diff <= 0) {
+                return {
+                    total: 0,
+                    days: 0,
+                    hours: 0,
+                    minutes: 0,
+                    seconds: 0,
+                    completed: true
+                };
+            }
+
+            // Calculate time units
+            const seconds = Math.floor((diff / 1000) % 60);
+            const minutes = Math.floor((diff / 1000 / 60) % 60);
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+            return {
+                total: diff,
+                days,
+                hours,
+                minutes,
+                seconds,
+                completed: false
+            };
+        };
+
+        // Update progress bar
+        const updateProgress = () => {
+            const totalDuration = targetDate - startDate;
+            const elapsed = new Date() - startDate;
+            const progress = Math.min((elapsed / totalDuration) * 100, 100);
+            
+            progressFill.style.width = `${progress}%`;
+            progressText.textContent = `${progress.toFixed(1)}% complete`;
+        };
+
+        // Update the display
+        const updateDisplay = () => {
+            const time = getTimeRemaining();
+
+            if (time.completed) {
+                clearInterval(timerInterval);
+                timerEl.innerHTML = `
+                    <div class="completed">
+                        🎉 Time's Up! 🎉
+                    </div>
+                `;
+                progressFill.style.width = '100%';
+                progressText.textContent = '100% complete';
+                return;
+            }
+
+            // Update values with animation effect
+            animateValue(daysEl, time.days);
+            animateValue(hoursEl, time.hours);
+            animateValue(minutesEl, time.minutes);
+            animateValue(secondsEl, time.seconds);
+
+            updateProgress();
+        };
+
+        // Animate value change
+        const animateValue = (element, value) => {
+            const newValue = padNumber(value);
+            if (element.textContent !== newValue) {
+                element.style.transform = 'scale(1.1)';
+                element.textContent = newValue;
+                setTimeout(() => {
+                    element.style.transform = 'scale(1)';
+                }, 100);
+            }
+        };
+
+        // Start the countdown
+        const startCountdown = () => {
+            // Clear existing interval
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+
+            // Reset start date for progress tracking
+            startDate = new Date();
+
+            // Restore timer HTML if showing completion message
+            if (timerEl.querySelector('.completed')) {
+                timerEl.innerHTML = `
+                    <div class="time-box">
+                        <div class="time-value" id="days">00</div>
+                        <div class="time-label">Days</div>
+                    </div>
+                    <div class="time-box">
+                        <div class="time-value" id="hours">00</div>
+                        <div class="time-label">Hours</div>
+                    </div>
+                    <div class="time-box">
+                        <div class="time-value" id="minutes">00</div>
+                        <div class="time-label">Minutes</div>
+                    </div>
+                    <div class="time-box">
+                        <div class="time-value" id="seconds">00</div>
+                        <div class="time-label">Seconds</div>
+                    </div>
+                `;
+                // Re-select elements
+                daysEl = document.querySelector('#days');
+                hoursEl = document.querySelector('#hours');
+                minutesEl = document.querySelector('#minutes');
+                secondsEl = document.querySelector('#seconds');
+            }
+
+            // Initial update
+            updateDisplay();
+
+            // Update every second
+            timerInterval = setInterval(updateDisplay, 1000);
+        };
+
+        // Set custom date
+        const setCustomDate = (date, name = 'Custom Event') => {
+            targetDate = date;
+            eventNameEl.textContent = name;
+            startCountdown();
+        };
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+
+        // Set date button
+        setDateBtn.addEventListener('click', () => {
+            const inputValue = targetDateInput.value;
+            if (inputValue) {
+                const date = new Date(inputValue);
+                if (date > new Date()) {
+                    setCustomDate(date, 'Custom Countdown');
+                } else {
+                    alert('Please select a future date!');
+                }
+            }
+        });
+
+        // Preset buttons
+        presetBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const now = new Date();
+                let newDate = new Date(now);
+                let eventName = '';
+
+                if (btn.dataset.minutes) {
+                    newDate.setMinutes(now.getMinutes() + parseInt(btn.dataset.minutes));
+                    eventName = `${btn.dataset.minutes} Minutes Timer`;
+                } else if (btn.dataset.hours) {
+                    newDate.setHours(now.getHours() + parseInt(btn.dataset.hours));
+                    eventName = `${btn.dataset.hours} Hour Timer`;
+                } else if (btn.dataset.days) {
+                    newDate.setDate(now.getDate() + parseInt(btn.dataset.days));
+                    eventName = btn.dataset.days === '1' ? 'Tomorrow' : `${btn.dataset.days} Days`;
+                }
+
+                setCustomDate(newDate, eventName);
+            });
+        });
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        
+        // Set default value for datetime input
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        targetDateInput.value = now.toISOString().slice(0, 16);
+
+        // Start initial countdown
+        startCountdown();
+    </script>
+</body>
+</html>
+
+<!-- 
+  // DATE MATH
+  const now = new Date();
+  const targetDate = new Date('2025-01-01');
+  const diff = targetDate - now;  // Difference in milliseconds
+
+  // CONVERTING MILLISECONDS
+  const seconds = Math.floor((diff / 1000) % 60);
+  const minutes = Math.floor((diff / 1000 / 60) % 60);
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+  // setInterval - Run function repeatedly
+  const timerInterval = setInterval(() => {
+      updateDisplay();
+  }, 1000);  // Every 1000ms (1 second)
+
+  // clearInterval - Stop the interval
+  clearInterval(timerInterval);
+
+  // PAD NUMBER - Add leading zeros
+  const padNumber = (num) => {
+      return num.toString().padStart(2, '0');
+  };
+  // padStart(2, '0'): Make string 2 chars, pad with '0'
+  // 5 becomes "05", 12 stays "12" 
+-->

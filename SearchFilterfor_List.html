@@ -1,0 +1,566 @@
+<!-- 
+Description
+Create a list of items (products, contacts, etc.) with a search input that filters items in real-time as user types.
+
+What You'll Learn
+Array filtering
+Real-time search
+Case-insensitive matching
+Highlighting matches
+Debouncing (performance optimization)
+Step-by-Step Approach
+Create list of data items
+Render all items initially
+Listen to search input
+Filter data based on search term
+Re-render filtered results
+Add highlight to matching text 
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Filter</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        /* Search section */
+        .search-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px 15px 50px;
+            font-size: 16px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: #667eea;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+        }
+
+        .clear-btn {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #ddd;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            display: none;
+        }
+
+        .clear-btn.show {
+            display: block;
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #eee;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            border-color: #667eea;
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+        }
+
+        /* Results info */
+        .results-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .sort-select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        /* Items list */
+        .items-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .item-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .item-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .item-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .item-details {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .item-category {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #f0f0f0;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .item-price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        /* Highlight matching text */
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 0;
+            border-radius: 2px;
+        }
+
+        /* No results */
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+
+        .no-results .emoji {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        /* Loading state */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Product Search</h1>
+
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="search-input" placeholder="Search products...">
+                <button class="clear-btn" id="clear-btn">&times;</button>
+            </div>
+
+            <div class="filters">
+                <button class="filter-btn active" data-category="all">All</button>
+                <button class="filter-btn" data-category="electronics">Electronics</button>
+                <button class="filter-btn" data-category="clothing">Clothing</button>
+                <button class="filter-btn" data-category="books">Books</button>
+                <button class="filter-btn" data-category="home">Home & Garden</button>
+            </div>
+        </div>
+
+        <!-- Results Info -->
+        <div class="results-info">
+            <span id="results-count">Showing 0 products</span>
+            <select class="sort-select" id="sort-select">
+                <option value="name-asc">Name (A-Z)</option>
+                <option value="name-desc">Name (Z-A)</option>
+                <option value="price-asc">Price (Low to High)</option>
+                <option value="price-desc">Price (High to Low)</option>
+            </select>
+        </div>
+
+        <!-- Items List -->
+        <div class="items-list" id="items-list">
+            <div class="loading">Loading products...</div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // DATA - Products array (simulate API data)
+        // ============================================
+        const products = [
+            { id: 1, name: 'iPhone 15 Pro', category: 'electronics', price: 999, emoji: '📱', description: 'Latest Apple smartphone' },
+            { id: 2, name: 'MacBook Air M2', category: 'electronics', price: 1199, emoji: '💻', description: 'Lightweight powerful laptop' },
+            { id: 3, name: 'Sony Headphones', category: 'electronics', price: 349, emoji: '🎧', description: 'Noise cancelling wireless' },
+            { id: 4, name: 'Leather Jacket', category: 'clothing', price: 199, emoji: '🧥', description: 'Premium genuine leather' },
+            { id: 5, name: 'Running Shoes', category: 'clothing', price: 129, emoji: '👟', description: 'Comfortable sports shoes' },
+            { id: 6, name: 'Winter Sweater', category: 'clothing', price: 79, emoji: '🧶', description: 'Warm wool sweater' },
+            { id: 7, name: 'JavaScript Guide', category: 'books', price: 45, emoji: '📚', description: 'Complete JS reference' },
+            { id: 8, name: 'React Handbook', category: 'books', price: 39, emoji: '📖', description: 'Learn React step by step' },
+            { id: 9, name: 'Python Basics', category: 'books', price: 35, emoji: '📕', description: 'Introduction to Python' },
+            { id: 10, name: 'Coffee Maker', category: 'home', price: 89, emoji: '☕', description: 'Automatic drip coffee' },
+            { id: 11, name: 'Plant Pot Set', category: 'home', price: 45, emoji: '🪴', description: 'Ceramic pots set of 3' },
+            { id: 12, name: 'LED Desk Lamp', category: 'home', price: 59, emoji: '💡', description: 'Adjustable brightness' },
+            { id: 13, name: 'Samsung Galaxy S24', category: 'electronics', price: 899, emoji: '📱', description: 'Android flagship phone' },
+            { id: 14, name: 'iPad Pro', category: 'electronics', price: 1099, emoji: '📲', description: 'Professional tablet' },
+            { id: 15, name: 'Denim Jeans', category: 'clothing', price: 89, emoji: '👖', description: 'Classic blue denim' },
+            { id: 16, name: 'Cooking Masterclass', category: 'books', price: 55, emoji: '📗', description: 'Professional recipes' },
+            { id: 17, name: 'Blender Pro', category: 'home', price: 149, emoji: '🍹', description: 'High-speed blender' },
+            { id: 18, name: 'Wireless Charger', category: 'electronics', price: 49, emoji: '🔋', description: 'Fast charging pad' },
+            { id: 19, name: 'Yoga Mat', category: 'home', price: 35, emoji: '🧘', description: 'Non-slip exercise mat' },
+            { id: 20, name: 'Sunglasses', category: 'clothing', price: 159, emoji: '🕶️', description: 'UV protection polarized' }
+        ];
+
+        // ============================================
+        // STATE
+        // ============================================
+        let filteredProducts = [...products];
+        let currentCategory = 'all';
+        let currentSearch = '';
+        let currentSort = 'name-asc';
+
+        // ============================================
+        // DOM ELEMENTS
+        // ============================================
+        const searchInput = document.querySelector('#search-input');
+        const clearBtn = document.querySelector('#clear-btn');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const sortSelect = document.querySelector('#sort-select');
+        const itemsList = document.querySelector('#items-list');
+        const resultsCount = document.querySelector('#results-count');
+
+        // ============================================
+        // FUNCTIONS
+        // ============================================
+
+        // Highlight matching text in string
+        const highlightMatch = (text, searchTerm) => {
+            if (!searchTerm) return text;
+            
+            // Create regex with global and case-insensitive flags
+            const regex = new RegExp(`(${escapeRegex(searchTerm)})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        };
+
+        // Escape special regex characters
+        const escapeRegex = (string) => {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        };
+
+        // Filter products based on search and category
+        const filterProducts = () => {
+            let result = [...products];
+
+            // Filter by category
+            if (currentCategory !== 'all') {
+                result = result.filter(product => product.category === currentCategory);
+            }
+
+            // Filter by search term
+            if (currentSearch) {
+                const searchLower = currentSearch.toLowerCase();
+                result = result.filter(product => 
+                    product.name.toLowerCase().includes(searchLower) ||
+                    product.description.toLowerCase().includes(searchLower) ||
+                    product.category.toLowerCase().includes(searchLower)
+                );
+            }
+
+            // Sort results
+            result = sortProducts(result);
+
+            filteredProducts = result;
+            renderProducts();
+        };
+
+        // Sort products
+        const sortProducts = (products) => {
+            const sorted = [...products];
+            
+            switch (currentSort) {
+                case 'name-asc':
+                    return sorted.sort((a, b) => a.name.localeCompare(b.name));
+                case 'name-desc':
+                    return sorted.sort((a, b) => b.name.localeCompare(a.name));
+                case 'price-asc':
+                    return sorted.sort((a, b) => a.price - b.price);
+                case 'price-desc':
+                    return sorted.sort((a, b) => b.price - a.price);
+                default:
+                    return sorted;
+            }
+        };
+
+        // Render products to DOM
+        const renderProducts = () => {
+            // Update results count
+            const count = filteredProducts.length;
+            resultsCount.textContent = `Showing ${count} product${count !== 1 ? 's' : ''}`;
+
+            // No results
+            if (count === 0) {
+                itemsList.innerHTML = `
+                    <div class="no-results">
+                        <div class="emoji">🔍</div>
+                        <h3>No products found</h3>
+                        <p>Try adjusting your search or filter</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Render product cards
+            itemsList.innerHTML = filteredProducts.map(product => `
+                <div class="item-card" data-id="${product.id}">
+                    <div class="item-avatar">${product.emoji}</div>
+                    <div class="item-info">
+                        <div class="item-name">${highlightMatch(product.name, currentSearch)}</div>
+                        <div class="item-details">${highlightMatch(product.description, currentSearch)}</div>
+                        <span class="item-category">${product.category}</span>
+                    </div>
+                    <div class="item-price">$${product.price}</div>
+                </div>
+            `).join('');
+        };
+
+        // Debounce function - Delays execution until user stops typing
+        const debounce = (func, delay) => {
+            let timeoutId;
+            return (...args) => {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => func.apply(this, args), delay);
+            };
+        };
+
+        // Handle search input
+        const handleSearch = (e) => {
+            currentSearch = e.target.value.trim();
+            
+            // Show/hide clear button
+            clearBtn.classList.toggle('show', currentSearch.length > 0);
+            
+            filterProducts();
+        };
+
+        // Debounced search for better performance
+        const debouncedSearch = debounce(handleSearch, 300);
+
+        // Clear search
+        const clearSearch = () => {
+            searchInput.value = '';
+            currentSearch = '';
+            clearBtn.classList.remove('show');
+            filterProducts();
+            searchInput.focus();
+        };
+
+        // Handle category filter
+        const handleCategoryFilter = (category) => {
+            currentCategory = category;
+            
+            // Update active button
+            filterBtns.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.category === category);
+            });
+            
+            filterProducts();
+        };
+
+        // Handle sort change
+        const handleSort = (e) => {
+            currentSort = e.target.value;
+            filterProducts();
+        };
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+
+        // Search input with debounce
+        searchInput.addEventListener('input', debouncedSearch);
+
+        // Clear button
+        clearBtn.addEventListener('click', clearSearch);
+
+        // Category filter buttons
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                handleCategoryFilter(btn.dataset.category);
+            });
+        });
+
+        // Sort select
+        sortSelect.addEventListener('change', handleSort);
+
+        // Keyboard shortcut: Focus search with "/"
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '/' && document.activeElement !== searchInput) {
+                e.preventDefault();
+                searchInput.focus();
+            }
+            // Clear with Escape
+            if (e.key === 'Escape' && document.activeElement === searchInput) {
+                clearSearch();
+                searchInput.blur();
+            }
+        });
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        
+        // Initial render
+        setTimeout(() => {
+            filterProducts();
+        }, 500); // Simulate loading delay
+    </script>
+</body>
+</html>
+
+
+
+<!-- 
+// FILTERING ARRAYS
+// The filter() method creates new array with elements that pass the test
+
+const filtered = products.filter(product => {
+    return product.name.toLowerCase().includes(searchTerm.toLowerCase());
+});
+
+// CASE-INSENSITIVE SEARCH
+const searchLower = searchTerm.toLowerCase();
+const matches = text.toLowerCase().includes(searchLower);
+
+// DEBOUNCING - Important for performance!
+// Without debounce: Function runs on EVERY keystroke
+// With debounce: Function runs only after user STOPS typing
+
+const debounce = (func, delay) => {
+    let timeoutId;
+    return (...args) => {
+        clearTimeout(timeoutId);  // Cancel previous timer
+        timeoutId = setTimeout(() => {
+            func.apply(this, args);  // Execute after delay
+        }, delay);
+    };
+};
+
+// Usage:
+const debouncedSearch = debounce(handleSearch, 300);
+input.addEventListener('input', debouncedSearch);
+
+// HIGHLIGHTING MATCHES
+// Use regex to wrap matching text in <span>
+const highlightMatch = (text, searchTerm) => {
+    const regex = new RegExp(`(${searchTerm})`, 'gi');
+    return text.replace(regex, '<span class="highlight">$1</span>');
+};
+// "JavaScript" with search "java" becomes:
+// "<span class='highlight'>Java</span>Script"
+
+// SORTING ARRAYS
+// sort() modifies original array, so use spread [...array] first
+
+// Alphabetical sort
+array.sort((a, b) => a.name.localeCompare(b.name));
+
+// Numerical sort
+array.sort((a, b) => a.price - b.price);  // Ascending
+array.sort((a, b) => b.price - a.price);  // Descending
+-->

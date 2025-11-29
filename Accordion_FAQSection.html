@@ -1,0 +1,336 @@
+<!-- 
+Description
+- Build an FAQ section where clicking a question expands/collapses its answer. Only one answer should be visible at a time (optional: allow multiple open).
+
+What You'll Learn
+- Event delegation
+- CSS transitions for smooth animations
+- Toggle functionality
+- Working with sibling elements
+
+------ Step-by-Step Approach ------
+Create HTML structure with questions and answers
+Style with CSS (hide answers by default)
+Add click listeners to questions
+Toggle visibility of clicked answer
+Close other answers (optional) 
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ Accordion</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .faq-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #333;
+        }
+
+        .accordion {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .accordion-item {
+            border-bottom: 1px solid #eee;
+        }
+
+        .accordion-item:last-child {
+            border-bottom: none;
+        }
+
+        .accordion-header {
+            width: 100%;
+            padding: 20px 25px;
+            background: white;
+            border: none;
+            text-align: left;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+
+        .accordion-header:hover {
+            background: #f8f9fa;
+        }
+
+        /* Icon */
+        .accordion-icon {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+            transition: transform 0.3s ease;
+        }
+
+        /* When item is active */
+        .accordion-item.active .accordion-header {
+            background: #667eea;
+            color: white;
+        }
+
+        .accordion-item.active .accordion-icon {
+            color: white;
+            transform: rotate(45deg);
+        }
+
+        /* Content */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .accordion-item.active .accordion-content {
+            max-height: 300px; /* Adjust based on content */
+        }
+
+        .accordion-body {
+            padding: 0 25px 20px 25px;
+            color: #666;
+        }
+
+        /* Mode toggle */
+        .mode-toggle {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .mode-toggle label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .mode-toggle input {
+            width: 18px;
+            height: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="faq-container">
+        <h1>❓ Frequently Asked Questions</h1>
+
+        <!-- Mode Toggle -->
+        <div class="mode-toggle">
+            <label>
+                <input type="checkbox" id="multi-mode">
+                Allow multiple open items
+            </label>
+        </div>
+
+        <!-- Accordion -->
+        <div class="accordion" id="accordion">
+            <!-- Item 1 -->
+            <div class="accordion-item">
+                <button class="accordion-header">
+                    <span>What is JavaScript?</span>
+                    <span class="accordion-icon">+</span>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        JavaScript is a versatile programming language primarily used for 
+                        creating interactive and dynamic content on websites. It runs in 
+                        web browsers and can also be used on servers with Node.js. JavaScript 
+                        is essential for modern web development alongside HTML and CSS.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="accordion-item">
+                <button class="accordion-header">
+                    <span>What is the DOM?</span>
+                    <span class="accordion-icon">+</span>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        DOM stands for Document Object Model. It's a programming interface 
+                        that represents the structure of an HTML document as a tree of objects. 
+                        JavaScript can manipulate the DOM to change content, structure, and 
+                        styling of web pages dynamically without reloading.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="accordion-item">
+                <button class="accordion-header">
+                    <span>What is an Event Listener?</span>
+                    <span class="accordion-icon">+</span>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        An event listener is a function that waits for a specific event 
+                        (like a click, key press, or mouse movement) to occur on an element. 
+                        When the event happens, the listener executes a callback function. 
+                        This is how we make web pages interactive!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="accordion-item">
+                <button class="accordion-header">
+                    <span>What is React?</span>
+                    <span class="accordion-icon">+</span>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        React is a popular JavaScript library for building user interfaces, 
+                        particularly single-page applications. It uses a component-based 
+                        architecture and a virtual DOM for efficient updates. React was 
+                        developed by Facebook and is widely used in modern web development.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 5 -->
+            <div class="accordion-item">
+                <button class="accordion-header">
+                    <span>How do I learn JavaScript effectively?</span>
+                    <span class="accordion-icon">+</span>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        The best way to learn JavaScript is through practice! Start with 
+                        fundamentals, build small projects, and gradually increase complexity. 
+                        Use resources like MDN Web Docs, freeCodeCamp, and JavaScript30. 
+                        Most importantly, code every day and don't be afraid to make mistakes.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // DOM ELEMENTS
+        // ============================================
+        const accordion = document.querySelector('#accordion');
+        const multiModeCheckbox = document.querySelector('#multi-mode');
+
+        // ============================================
+        // FUNCTIONS
+        // ============================================
+
+        // Close all accordion items
+        const closeAllItems = () => {
+            const items = accordion.querySelectorAll('.accordion-item');
+            items.forEach(item => {
+                item.classList.remove('active');
+            });
+        };
+
+        // Toggle single item
+        const toggleItem = (item) => {
+            const isActive = item.classList.contains('active');
+            
+            // If multi-mode is OFF, close all items first
+            if (!multiModeCheckbox.checked) {
+                closeAllItems();
+            }
+            
+            // Toggle clicked item
+            if (isActive) {
+                item.classList.remove('active');
+            } else {
+                item.classList.add('active');
+            }
+        };
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+
+        // Event Delegation - Listen on parent, handle child clicks
+        accordion.addEventListener('click', (e) => {
+            // Find the header that was clicked
+            const header = e.target.closest('.accordion-header');
+            
+            // If no header was clicked, do nothing
+            if (!header) return;
+            
+            // Find the parent accordion item
+            const item = header.closest('.accordion-item');
+            
+            // Toggle the item
+            toggleItem(item);
+        });
+
+        // Keyboard accessibility
+        accordion.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                const header = e.target.closest('.accordion-header');
+                if (header) {
+                    e.preventDefault();
+                    const item = header.closest('.accordion-item');
+                    toggleItem(item);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
+<!-- 
+
+// EVENT DELEGATION - Instead of adding listeners to each header:
+// ❌ Bad approach
+    headers.forEach(header => {
+        header.addEventListener('click', () => { });
+    });
+
+// ✅ Good approach - Listen on parent
+    accordion.addEventListener('click', (e) => {
+        // e.target = the actual element clicked
+        // .closest() = find parent matching selector
+        const header = e.target.closest('.accordion-header');
+        if (!header) return;  // Clicked somewhere else
+        // Handle the click...
+    });
+
+// CSS TRANSITION TRICK for smooth height animation
+// Can't transition height: auto, so we use max-height
+    .accordion-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+    .accordion-item.active .accordion-content {
+        max-height: 300px;  // Larger than actual content
+    } 
+
+-->
