@@ -1,23 +1,3 @@
-<!-- 
-Description
-Create a list of items (products, contacts, etc.) with a search input that filters items in real-time as user types.
-
-What You'll Learn
-Array filtering
-Real-time search
-Case-insensitive matching
-Highlighting matches
-Debouncing (performance optimization)
-Step-by-Step Approach
-Create list of data items
-Render all items initially
-Listen to search input
-Filter data based on search term
-Re-render filtered results
-Add highlight to matching text 
--->
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -515,52 +495,4 @@ Add highlight to matching text
 
 
 
-<!-- 
-// FILTERING ARRAYS
-// The filter() method creates new array with elements that pass the test
 
-const filtered = products.filter(product => {
-    return product.name.toLowerCase().includes(searchTerm.toLowerCase());
-});
-
-// CASE-INSENSITIVE SEARCH
-const searchLower = searchTerm.toLowerCase();
-const matches = text.toLowerCase().includes(searchLower);
-
-// DEBOUNCING - Important for performance!
-// Without debounce: Function runs on EVERY keystroke
-// With debounce: Function runs only after user STOPS typing
-
-const debounce = (func, delay) => {
-    let timeoutId;
-    return (...args) => {
-        clearTimeout(timeoutId);  // Cancel previous timer
-        timeoutId = setTimeout(() => {
-            func.apply(this, args);  // Execute after delay
-        }, delay);
-    };
-};
-
-// Usage:
-const debouncedSearch = debounce(handleSearch, 300);
-input.addEventListener('input', debouncedSearch);
-
-// HIGHLIGHTING MATCHES
-// Use regex to wrap matching text in <span>
-const highlightMatch = (text, searchTerm) => {
-    const regex = new RegExp(`(${searchTerm})`, 'gi');
-    return text.replace(regex, '<span class="highlight">$1</span>');
-};
-// "JavaScript" with search "java" becomes:
-// "<span class='highlight'>Java</span>Script"
-
-// SORTING ARRAYS
-// sort() modifies original array, so use spread [...array] first
-
-// Alphabetical sort
-array.sort((a, b) => a.name.localeCompare(b.name));
-
-// Numerical sort
-array.sort((a, b) => a.price - b.price);  // Ascending
-array.sort((a, b) => b.price - a.price);  // Descending
--->
