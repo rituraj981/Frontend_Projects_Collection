@@ -139,26 +139,23 @@
             <button class="btn-increase" id="increase-btn">+ Increase</button>
         </div>
         
-        <!-- Step Control (Bonus Feature) -->
+        <!-- Step Control -->
         <div class="step-control">
             <label for="step-input">Step Value:</label>
             <input type="number" id="step-input" value="1" min="1" max="100">
         </div>
         
-        <!-- History (Bonus Feature) -->
+        <!-- History -->
         <div class="history" id="history"></div>
     </div>
 
     <script>
-        // ============================================
-        // STATE - Variables that hold our data
-        // ============================================
+        
+        // STATE 
         let count = 0;
         let history = [];
 
-        // ============================================
         // DOM ELEMENTS - Selecting elements we need
-        // ============================================
         const countDisplay = document.querySelector('#count-display');
         const decreaseBtn = document.querySelector('#decrease-btn');
         const resetBtn = document.querySelector('#reset-btn');
@@ -166,9 +163,7 @@
         const stepInput = document.querySelector('#step-input');
         const historyDisplay = document.querySelector('#history');
 
-        // ============================================
-        // FUNCTIONS - Reusable blocks of code
-        // ============================================
+        // FUNCTIONS
 
         // Get the current step value from input
         const getStep = () => {
@@ -235,9 +230,7 @@
             historyDisplay.textContent = '';
         };
 
-        // ============================================
         // EVENT LISTENERS - Connecting buttons to functions
-        // ============================================
         increaseBtn.addEventListener('click', increase);
         decreaseBtn.addEventListener('click', decrease);
         resetBtn.addEventListener('click', reset);
@@ -260,11 +253,10 @@
             }
         });
 
-        // ============================================
         // INITIALIZATION
-        // ============================================
         updateDisplay();
     </script>
 </body>
 </html>
+
 
